@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AiImageService.Models.AnalysisHistory>
+
+@{
+    ViewData["Title"] = "Історія аналізів";
+}
+
+<div class="container mt-4">
+    <h2>Історія Аналізів (Amazon RDS)</h2>
+    <hr />
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Прев'ю</th>
+                <th>Ім'я файла</th>
+                <th>Джерело</th>
+                <th>Дата</th>
+                <th>Результат</th>
+                <th>Confidence</th>
+                <th>S3 Посилання</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.S3Url" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
+                    </td>
+                    <td>@item.FileName</td>
+                    <td>
+                        <span class="badge @(item.Source == "Web" ? "bg-primary" : "bg-info")">@item.Source</span>
+                    </td>
+                    <td>@item.UploadedAt.ToLocalTime().ToString("g")</td>
+                    <td><strong>@item.PredictedLabel</strong></td>
+                    <td>@((item.Confidence * 100).ToString("F2"))%</td>
+                    <td>
+                        <a href="@item.S3Url" target="_blank" class="btn btn-sm btn-outline-primary">Open S3</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

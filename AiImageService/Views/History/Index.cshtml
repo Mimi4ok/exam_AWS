@@ -1,0 +1,76 @@
+﻿@model AiImageService.Models.AnalysisHistoryViewModel
+
+@{
+    ViewData["Title"] = "Історія аналізів";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-journal-text me-2"></i>Історія розпізнавань</h2>
+        <a asp-controller="ImageAnalysis" asp-action="Index" class="btn btn-outline-primary">
+            <i class="bi bi-plus-circle me-1"></i> Новий аналіз
+        </a>
+    </div>
+
+    <!-- Форма фільтрації -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Index" class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">Фільтр за джерелом</label>
+                    <select name="source" class="form-select" value="@Model.SearchSource">
+                        <option value="">Усі джерела</option>
+                        <option value="Web">Web-сайт</option>
+                        <option value="TelegramBot">Telegram Bot</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">Пошук за міткою</label>
+                    <input type="text" name="label" class="form-control" placeholder="Наприклад: Lion, Tiger..." value="@Model.SearchLabel" />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i> Знайти
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Список записів -->
+    @if (!Model.Items.Any())
+    {
+        <div class="alert alert-info text-center py-4">
+            <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+            Записів в історії поки немає.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var item in Model.Items)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 position-relative">
+                        <span class="badge position-absolute top-0 end-0 m-2 @(item.Source == "TelegramBot" ? "bg-info" : "bg-success")">
+                            @item.Source
+                        </span>
+                        <img src="@item.S3Url" class="card-img-top" style="height: 180px; object-fit: cover;" alt="@item.PredictedLabel" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-capitalize">@item.PredictedLabel</h5>
+                            <p class="card-text text-muted mb-2">
+                                Точність: <strong>@((item.Confidence * 100).ToString("F2"))%</strong>
+                            </p>
+                            <div class="mt-auto pt-2 border-top fs-7 text-muted d-flex justify-content-between align-items-center">
+                                <small><i class="bi bi-clock me-1"></i>@item.UploadedAt.ToString("dd.MM.yyyy HH:mm")</small>
+                                <a href="@item.S3Url" target="_blank" class="btn btn-sm btn-outline-secondary" title="Відкрити в S3">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
