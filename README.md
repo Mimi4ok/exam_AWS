@@ -17,7 +17,9 @@ AWS IAM — для керування доступами та ключами
 
 Публічне посилання
 
-Link: (http://aiimageservice-linux.eba-sewdmgjx.eu-central-1.elasticbeanstalk.com/)
+Link AWS: (http://aiimageservice-linux.eba-sewdmgjx.eu-central-1.elasticbeanstalk.com/)
+
+Link Telegram: https://t.me/animal_ex_bot
 
 Скріншоти роботи застосунку та AWS-ресурсів
 
